@@ -52,7 +52,7 @@ const Navbar = ({ setCurrentPage, isAdmin }) => {
             handleNavClick('home');
           }}
         >
-          <h2>📺 ZOHIR SHOP</h2>
+          <h2>ZOHIR SHOP</h2>
         </a>
         
         {/* Hamburger Button for Mobile */}

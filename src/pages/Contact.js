@@ -66,12 +66,12 @@ const Contact = () => {
               <div className="info-content">
                 <h3>WhatsApp</h3>
                 <a 
-                  href="https://wa.me/212612345678" 
+                  href="https://wa.me/212632932177" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="info-link"
                 >
-                  +212 612-345-678
+                  +212 632-932-177
                 </a>
               </div>
             </div>
@@ -81,7 +81,7 @@ const Contact = () => {
               <div className="info-content">
                 <h3>Email</h3>
                 <a href="mailto:info@iptvshop.com" className="info-link">
-                  info@iptvshop.com
+                  Zohizaidan981@gmail.com
                 </a>
               </div>
             </div>
