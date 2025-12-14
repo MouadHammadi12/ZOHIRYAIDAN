@@ -302,7 +302,7 @@ const AdminDashboard = ({ onLogout }) => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Price (MAD) *</label>
+                  <label>Price (€) *</label>
                   <input
                     type="number"
                     step="0.01"
@@ -376,7 +376,7 @@ const AdminDashboard = ({ onLogout }) => {
                     )}
                   </td>
                   <td data-label="Name">{product.name}</td>
-                  <td data-label="Price">{product.price.toFixed(2)} MAD</td>
+                  <td data-label="Price">{product.price.toFixed(2)} €</td>
                   <td data-label="Channels">{product.channels ? product.channels.toLocaleString() : '-'}</td>
                   <td data-label="Status">
                     <button

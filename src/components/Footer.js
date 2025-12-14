@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-content">
           <div className="footer-section">
-            <h3 className="footer-title">IPTV Shop</h3>
+            <h3 className="footer-title">Zohir Shop</h3>
             <p className="footer-description">
               Premium IPTV service with over 45,000 channels and movies. 
               Enjoy the best streaming experience in 4K Ultra HD quality.
@@ -37,7 +37,7 @@ const Footer = () => {
             <ul className="footer-links">
               <li>
                 <a 
-                  href="https://wa.me/212612345678" 
+                  href="https://wa.me/212632-932177" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="whatsapp-link"
@@ -45,13 +45,13 @@ const Footer = () => {
                   WhatsApp
                 </a>
               </li>
-              <li>Email: info@iptvshop.com</li>
+              <li>Email: Zohizaidan981@gmail.com</li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} IPTV Shop. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Zohir Shop. All rights reserved.</p>
         </div>
       </div>
     </footer>

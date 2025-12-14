@@ -8,7 +8,7 @@ const AdminLogin = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
 
   // Simple admin credentials (in production, use backend authentication)
-  const ADMIN_EMAIL = 'zohirzaidan@gmail.com';
+  const ADMIN_EMAIL = 'Zohizaidan981@gmail.com';
   const ADMIN_PASSWORD = 'zohirzaidan';
 
   const handleSubmit = async (e) => {

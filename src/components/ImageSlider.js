@@ -9,17 +9,24 @@ const ImageSlider = () => {
     {
       image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&q=80',
       title: 'Premium IPTV Service',
-      subtitle: 'Best Quality Streaming'
+      subtitle: `🔥🔥inclusive of all TV packages and movies, updated every week.
+✅Supports quality: H265, SD, HD, UHD, 4K, 3D.....
+✅Supported channels: 2000+ Channels`,
     },
     {
       image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1200&q=80',
       title: '45,000+ Channels and movies',
-      subtitle: 'Watch Your Favorite Shows'
+      subtitle: 'iptv 12 months subscription, iptv 1 year uk, iptv smarters pro, duplex play, smart iptv, Gse smart, Magbox, Box tv, Android box, Amazon Firestick, Apple TV, iPhone, Android phone, Smart TV, MacBook. To get a free test, contact us!',
     },
     {
       image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=1200&q=80',
-      title: '4K Ultra HD Quality',
-      subtitle: 'Crystal Clear Picture'
+      title: '4K ultra HD Quality',
+      subtitle: 'Crystal Clear Picture',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=1200&q=80',
+      title: 'Best IPTV Experience',
+      subtitle: 'Watch your favorite shows in the highest quality available',
     }
   ];
 
@@ -91,4 +98,3 @@ const ImageSlider = () => {
 };
 
 export default ImageSlider;
-
