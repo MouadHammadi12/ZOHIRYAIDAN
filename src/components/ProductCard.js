@@ -3,10 +3,10 @@ import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
   const handleWhatsApp = () => {
-    const message = `Hello! I'm interested in the ${product.name} for ${product.price} MAD.`;
-    const phoneNumber = '212632932177'; // Replace with your WhatsApp number (without +)
+    const phoneNumber = '212632932177';
+    const message = `Hello! I'm interested in ${product.name}`;
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    window.location.href = whatsappUrl;
   };
 
   // Calculate price per month based on product name
