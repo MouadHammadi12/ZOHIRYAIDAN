@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# 📺 IPTV Shop - موقع بيع اشتراكات IPTV
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+موقع ويب حديث لبيع اشتراكات IPTV مع لوحة تحكم للمدير.
 
-## Available Scripts
+## المميزات
 
-In the project directory, you can run:
+- ✅ صفحة رئيسية تعرض الاشتراكات على شكل بطاقات جميلة
+- ✅ أنواع الاشتراكات: شهر واحد، 3 أشهر، 6 أشهر، سنة واحدة
+- ✅ Navbar متجاوب في الأعلى
+- ✅ لوحة تحكم للمدير (Admin Dashboard)
+- ✅ نظام تسجيل دخول للمدير
+- ✅ إضافة/تعديل/حذف المنتجات من لوحة التحكم
+- ✅ دعم Firebase Firestore لتخزين البيانات
+- ✅ تصميم متجاوب (Responsive)
 
-### `npm start`
+## التثبيت
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. تثبيت الحزم المطلوبة:
+```bash
+npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. إعداد Firebase:
+   - افتح `src/firebase/config.js`
+   - ضع إعدادات Firebase الخاصة بك من Firebase Console
 
-### `npm test`
+3. إعداد Firebase Authentication:
+   - في Firebase Console، اذهب إلى Authentication
+   - فعّل Email/Password authentication
+   - أنشئ حساب مدير جديد
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. إعداد قاعدة البيانات:
+   - في Firebase Console، أنشئ collection باسم `subscriptions`
+   - أضف الاشتراكات بالشكل التالي:
+   ```json
+   {
+     "duration": "1month",
+     "price": 50,
+     "featured": false,
+     "features": [
+       "قنوات عربية",
+       "قنوات أجنبية",
+       "قنوات رياضية",
+       "قنوات أفلام"
+     ]
+   }
+   ```
 
-### `npm run build`
+   القيم الممكنة لـ `duration`:
+   - `1month` - شهر واحد
+   - `3months` - 3 أشهر
+   - `6months` - 6 أشهر
+   - `1year` - سنة واحدة
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## تشغيل المشروع
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+المشروع سيعمل على `http://localhost:3000`
 
-### `npm run eject`
+## البنية
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+src/
+├── components/
+│   ├── Navbar.js          # شريط التنقل
+│   └── ProductCard.js     # بطاقة المنتج
+├── pages/
+│   ├── Home.js            # الصفحة الرئيسية
+│   ├── AdminLogin.js      # صفحة تسجيل دخول المدير
+│   └── AdminDashboard.js  # لوحة تحكم المدير
+├── firebase/
+│   └── config.js          # إعدادات Firebase
+└── App.js                 # المكون الرئيسي
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## الاستخدام
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### للعملاء:
+1. افتح الموقع وسترى جميع الاشتراكات المتاحة
+2. اختر الاشتراك المناسب واضغط "اشترك الآن"
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### للمدير:
+1. اضغط على "تسجيل الدخول" في Navbar
+2. سجل دخولك باستخدام البريد الإلكتروني وكلمة المرور
+3. في لوحة التحكم يمكنك:
+   - إضافة منتج جديد
+   - تعديل منتج موجود
+   - حذف منتج
 
-## Learn More
+## ملاحظات
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- تأكد من إضافة إعدادات Firebase الصحيحة
+- تأكد من تفعيل Email/Password authentication في Firebase
+- يمكنك إضافة المزيد من المميزات مثل:
+  - نظام دفع
+  - إرسال إيميلات تأكيد
+  - إدارة الطلبات
+  - إحصائيات المبيعات
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## الأمان
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- تأكد من إعداد قواعد Firestore Security Rules لحماية البيانات
+- يمكنك إضافة التحقق من صلاحيات المدير في قاعدة البيانات
