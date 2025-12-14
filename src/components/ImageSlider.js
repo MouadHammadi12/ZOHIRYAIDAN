@@ -18,7 +18,7 @@ const ImageSlider = () => {
     },
     {
       image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=1200&q=80',
-      title: '4k ultra HD Quality',
+      title: '4K Ultra HD Quality',
       subtitle: 'Crystal Clear Picture'
     }
   ];

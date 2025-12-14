@@ -8,8 +8,8 @@ const AdminLogin = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
 
   // Simple admin credentials (in production, use backend authentication)
-  const ADMIN_EMAIL = 'admin@iptvshop.com';
-  const ADMIN_PASSWORD = 'admin123';
+  const ADMIN_EMAIL = 'zohirzaidan@gmail.com';
+  const ADMIN_PASSWORD = 'zohirzaidan';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +41,7 @@ const AdminLogin = ({ onLogin }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="admin@iptvshop.com"
+              placeholder="Enter your email"
             />
           </div>
           
