@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { useProducts } from '../contexts/ProductsContext';
 import './AdminDashboard.css';
 
 const AdminDashboard = ({ onLogout }) => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { products, loading: globalLoading, refreshProducts } = useProducts();
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -21,20 +21,10 @@ const AdminDashboard = ({ onLogout }) => {
   });
 
   useEffect(() => {
-    loadProducts();
+    // Products are loaded globally by ProductsProvider
   }, []);
 
-  const loadProducts = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'product'));
-      const productsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setProducts(productsData);
-    } catch (error) {
-      console.error('Error loading products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Remove local loadProducts function since we use global state
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -73,6 +63,7 @@ const AdminDashboard = ({ onLogout }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('handleSubmit called, editingProduct:', editingProduct);
     if (saving) return; // Prevent multiple submissions
     
     setSaving(true);
@@ -82,16 +73,29 @@ const AdminDashboard = ({ onLogout }) => {
       image: formData.image && formData.image.trim() !== '' ? formData.image : null,
       price: parseFloat(formData.price),
       channels: parseInt(formData.channels) || null,
-      is_active: formData.is_active
+      is_active: Boolean(formData.is_active)
     };
 
     try {
       if (editingProduct) {
-        await updateDoc(doc(db, 'product', editingProduct.id), productData);
+        console.log('Updating product:', editingProduct.id, productData);
+        
+        // Check if document exists first
+        const docRef = doc(db, 'product', editingProduct.id);
+        const docSnap = await getDoc(docRef);
+        
+        if (!docSnap.exists()) {
+          throw new Error('Product not found in database. It may have been deleted.');
+        }
+        
+        await updateDoc(docRef, productData);
+        console.log('Product updated successfully');
       } else {
+        console.log('Adding new product:', productData);
         await addDoc(collection(db, 'product'), productData);
+        console.log('Product added successfully');
       }
-      await loadProducts();
+      await refreshProducts();
       setShowForm(false);
       setEditingProduct(null);
       setImagePreview(null);
@@ -103,8 +107,11 @@ const AdminDashboard = ({ onLogout }) => {
         channels: '',
         is_active: true
       });
+      // Notify Home page to refresh (though it should auto-refresh via context)
+      window.dispatchEvent(new Event('productsUpdated'));
     } catch (error) {
       console.error('Error saving product:', error);
+      alert('Error saving product: ' + error.message);
     } finally {
       setSaving(false);
     }
@@ -125,16 +132,46 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   const handleDelete = async (productId) => {
+    console.log('handleDelete called with productId:', productId);
     if (window.confirm('Are you sure you want to delete this product?')) {
       setDeletingId(productId);
       try {
-        await deleteDoc(doc(db, 'product', productId));
-        await loadProducts();
+        console.log('Deleting product:', productId);
+        
+        // Check if document exists first
+        const docRef = doc(db, 'product', productId);
+        const docSnap = await getDoc(docRef);
+        
+        if (!docSnap.exists()) {
+          throw new Error('Product not found in database. It may have already been deleted.');
+        }
+        
+        await deleteDoc(docRef);
+        console.log('Product deleted successfully');
+        await refreshProducts();
+        // Notify Home page to refresh (though it should auto-refresh via context)
+        window.dispatchEvent(new Event('productsUpdated'));
       } catch (error) {
         console.error('Error deleting product:', error);
+        alert('Error deleting product: ' + error.message);
       } finally {
         setDeletingId(null);
       }
+    }
+  };
+
+  const clearAllProducts = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'product'));
+      const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
+      await Promise.all(deletePromises);
+      console.log('All products cleared');
+      await refreshProducts();
+      // Notify Home page to refresh (though it should auto-refresh via context)
+      window.dispatchEvent(new Event('productsUpdated'));
+    } catch (error) {
+      console.error('Error clearing products:', error);
+      alert('Error clearing products: ' + error.message);
     }
   };
 
@@ -144,10 +181,21 @@ const AdminDashboard = ({ onLogout }) => {
     const product = products.find(p => p.id === productId);
     if (product) {
       try {
-        await updateDoc(doc(db, 'product', productId), { is_active: !product.is_active });
-        await loadProducts();
+        // Check if document exists first
+        const docRef = doc(db, 'product', productId);
+        const docSnap = await getDoc(docRef);
+        
+        if (!docSnap.exists()) {
+          throw new Error('Product not found in database.');
+        }
+        
+        await updateDoc(docRef, { is_active: Boolean(!product.is_active) });
+        await refreshProducts();
+        // Notify Home page to refresh (though it should auto-refresh via context)
+        window.dispatchEvent(new Event('productsUpdated'));
       } catch (error) {
         console.error('Error updating product:', error);
+        alert('Error updating product status: ' + error.message);
       }
     }
   };
@@ -165,15 +213,6 @@ const AdminDashboard = ({ onLogout }) => {
       is_active: true
     });
   };
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Loading...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="admin-dashboard">
@@ -197,6 +236,22 @@ const AdminDashboard = ({ onLogout }) => {
             }}
           >
             + Add Product
+          </button>
+          <button 
+            className="refresh-btn"
+            onClick={() => refreshProducts()}
+          >
+            🔄 Refresh
+          </button>
+          <button 
+            className="clear-btn"
+            onClick={() => {
+              if (window.confirm('This will delete ALL products from the database. Are you sure?')) {
+                clearAllProducts();
+              }
+            }}
+          >
+            🗑️ Clear All
           </button>
           <button onClick={onLogout} className="logout-btn">
             Logout
@@ -327,7 +382,12 @@ const AdminDashboard = ({ onLogout }) => {
       )}
 
       <div className="products-list">
-        {products.length > 0 ? (
+        {globalLoading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <p>Loading products...</p>
+          </div>
+        ) : products.length > 0 ? (
           <table className="products-table">
             <thead>
               <tr>
