@@ -524,6 +524,101 @@
   font-weight: 500;
 }
 
+/* Mobile Cards Layout */
+.products-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  color: #1e293b;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.card-image-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.card-title-section {
+  flex: 1;
+}
+
+.card-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.card-price {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4facfe;
+}
+
+.card-body {
+  margin-bottom: 1rem;
+}
+
+.card-description {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.card-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-channels {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -553,84 +648,7 @@
   100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 968px) {
-  .stats-section {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
 
-  .products-table {
-    display: none;
-  }
-
-  .products-cards {
-    display: grid;
-  }
-
-  .products-table thead {
-    display: none;
-  }
-
-  .products-table tbody {
-    display: block;
-    width: 100%;
-  }
-
-  .products-table tr {
-    display: block;
-    margin-bottom: 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1rem;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-
-  .products-table td {
-    display: block;
-    border: none;
-    padding: 0.75rem 0;
-    text-align: right;
-    position: relative;
-    padding-right: 50%;
-    padding-left: 0;
-    border-bottom: 1px solid #f1f5f9;
-  }
-
-  .products-table td:last-child {
-    border-bottom: none;
-    padding-top: 1rem;
-  }
-
-  .products-table td:before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
-    font-weight: 600;
-    color: #1e293b;
-    text-align: left;
-  }
-
-  .products-table .action-buttons {
-    justify-content: flex-end;
-    margin-top: 0.5rem;
-  }
-
-  .products-table .status-btn {
-    margin-left: auto;
-    margin-right: 0;
-  }
-
-  .table-image,
-  .table-image-placeholder {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto;
-  }
-}
 
 @media (max-width: 768px) {
   .admin-dashboard {
@@ -733,7 +751,7 @@
   .add-product-btn,
   .refresh-btn,
   .clear-btn,
-  .toggle-btn,
+  .export-btn,
   .logout-btn {
     font-size: 0.9rem;
     padding: 0.6rem 1rem;
@@ -756,40 +774,13 @@
     font-size: 2.5rem;
   }
 
-  .product-card {
-    padding: 1rem;
+  .products-table tr {
+    padding: 0.75rem;
   }
 
-  .card-header {
-    gap: 0.75rem;
-  }
-
-  .card-image,
-  .card-image-placeholder {
-    width: 50px;
-    height: 50px;
-  }
-
-  .card-title {
-    font-size: 1rem;
-  }
-
-  .card-price {
-    font-size: 0.9rem;
-  }
-
-  .card-description {
+  .products-table td {
     font-size: 0.85rem;
-  }
-
-  .card-actions {
-    gap: 0.5rem;
-  }
-
-  .card-actions .edit-btn,
-  .card-actions .delete-btn {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
+    padding-right: 45%;
   }
 
   .products-table td:before {
@@ -900,15 +891,4 @@
   font-weight: 800;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Desktop Styles */
-@media (min-width: 969px) {
-  .products-table {
-    display: table;
-  }
-
-  .products-cards {
-    display: none;
-  }
 }

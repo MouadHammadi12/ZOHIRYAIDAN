@@ -233,6 +233,39 @@
   }
 }
 
+@media (max-width: 480px) {
+  .contact-page {
+    padding: 1rem 0;
+  }
+
+  .contact-container {
+    padding: 0 0.5rem;
+  }
+
+  .contact-title {
+    font-size: 1.5rem;
+  }
+
+  .contact-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .contact-info,
+  .contact-form-container {
+    padding: 1rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .contact-form button {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+}
+
 
 
 

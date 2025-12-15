@@ -69,6 +69,7 @@ const AdminDashboard = React.memo(({ onLogout }) => {
   const [deletingId, setDeletingId] = useState(null);
   const [totalVisits, setTotalVisits] = useState(0);
   const [showProducts, setShowProducts] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -80,6 +81,15 @@ const AdminDashboard = React.memo(({ onLogout }) => {
 
   useEffect(() => {
     // Products are loaded globally by ProductsProvider
+  }, []);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 968);
+    };
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
   const stats = useMemo(() => {
@@ -494,84 +504,83 @@ const AdminDashboard = React.memo(({ onLogout }) => {
               <p>Loading products...</p>
             </div>
         ) : products.length > 0 ? (
-          <>
-            <table className="products-table">
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Channels</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+          isMobile ? (
+            <div className="products-cards">
               {products.map((product) => (
-                <tr key={product.id}>
-                  <td data-label="Image">
-                    {product.image ? (
-                      <div className="table-image">
-                        <img src={product.image} alt={product.name} />
-                      </div>
-                    ) : (
-                      <div className="table-image-placeholder">📺</div>
-                    )}
-                  </td>
-                  <td data-label="Name">{product.name}</td>
-                  <td data-label="Price">{product.price.toFixed(2)} €</td>
-                  <td data-label="Channels">{product.channels ? product.channels.toLocaleString() : '-'}</td>
-                  <td data-label="Status">
-                    <button
-                      onClick={() => toggleActive(product.id)}
-                      className={`status-btn ${product.is_active ? 'active' : 'inactive'}`}
-                    >
-                      {product.is_active ? 'Active' : 'Inactive'}
-                    </button>
-                  </td>
-                  <td data-label="Actions">
-                    <div className="action-buttons">
-                      <button
-                        onClick={() => handleEdit(product)}
-                        className="edit-btn"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        className="delete-btn"
-                        disabled={deletingId === product.id}
-                      >
-                        {deletingId === product.id ? (
-                          <>
-                            <div className="spinner-small"></div>
-                            Deleting...
-                          </>
-                        ) : (
-                          'Delete'
-                        )}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                <ProductCardItem
+                  key={product.id}
+                  product={product}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onToggleActive={toggleActive}
+                  deletingId={deletingId}
+                />
               ))}
-            </tbody>
-          </table>
-
-          {/* Mobile Cards Layout */}
-          <div className="products-cards">
-            {products.map((product) => (
-              <ProductCardItem
-                key={product.id}
-                product={product}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onToggleActive={toggleActive}
-                deletingId={deletingId}
-              />
-            ))}
-          </div>
-          </>
+            </div>
+          ) : (
+            <table className="products-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Channels</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id}>
+                    <td data-label="Image">
+                      {product.image ? (
+                        <div className="table-image">
+                          <img src={product.image} alt={product.name} />
+                        </div>
+                      ) : (
+                        <div className="table-image-placeholder">📺</div>
+                      )}
+                    </td>
+                    <td data-label="Name">{product.name}</td>
+                    <td data-label="Price">{product.price.toFixed(2)} €</td>
+                    <td data-label="Channels">{product.channels ? product.channels.toLocaleString() : '-'}</td>
+                    <td data-label="Status">
+                      <button
+                        onClick={() => toggleActive(product.id)}
+                        className={`status-btn ${product.is_active ? 'active' : 'inactive'}`}
+                      >
+                        {product.is_active ? 'Active' : 'Inactive'}
+                      </button>
+                    </td>
+                    <td data-label="Actions">
+                      <div className="action-buttons">
+                        <button
+                          onClick={() => handleEdit(product)}
+                          className="edit-btn"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          className="delete-btn"
+                          disabled={deletingId === product.id}
+                        >
+                          {deletingId === product.id ? (
+                            <>
+                              <div className="spinner-small"></div>
+                              Deleting...
+                            </>
+                          ) : (
+                            'Delete'
+                          )}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )
         ) : (
           <div className="no-products">
             <p>No products found. Add a product to get started.</p>

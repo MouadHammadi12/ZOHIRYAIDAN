@@ -350,3 +350,49 @@
     font-size: 1.2rem;
   }
 }
+
+@media (max-width: 320px) {
+  .cart-sidebar {
+    width: 100vw;
+  }
+
+  .cart-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .cart-item {
+    padding: 0.5rem;
+  }
+
+  .cart-item-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cart-item-title {
+    font-size: 0.8rem;
+  }
+
+  .cart-item-price {
+    font-size: 0.9rem;
+  }
+
+  .quantity-controls button {
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+  }
+
+  .cart-total {
+    font-size: 1rem;
+  }
+
+  .total-amount {
+    font-size: 1.1rem;
+  }
+
+  .checkout-btn {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+}

@@ -164,3 +164,40 @@
     bottom: 1rem;
   }
 }
+
+@media (max-width: 480px) {
+  .image-slider {
+    height: 280px;
+  }
+
+  .slide-title {
+    font-size: 1.5rem;
+  }
+
+  .slide-subtitle {
+    font-size: 1rem;
+  }
+
+  .slider-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.5rem;
+  }
+
+  .prev-btn {
+    left: 0.5rem;
+  }
+
+  .next-btn {
+    right: 0.5rem;
+  }
+
+  .slider-dots {
+    bottom: 0.5rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+}

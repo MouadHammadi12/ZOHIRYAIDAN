@@ -106,6 +106,40 @@
   }
 }
 
+@media (max-width: 480px) {
+  .footer {
+    padding: 1rem 0 0.5rem;
+  }
+
+  .footer-content {
+    gap: 1rem;
+  }
+
+  .footer-container {
+    padding: 0 0.5rem;
+  }
+
+  .footer-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .footer-links {
+    gap: 0.5rem;
+  }
+
+  .footer-link {
+    font-size: 0.9rem;
+  }
+
+  .footer-bottom {
+    padding: 1rem 0;
+  }
+
+  .footer-bottom p {
+    font-size: 0.8rem;
+  }
+}
+
 
 
 
