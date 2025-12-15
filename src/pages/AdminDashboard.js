@@ -9,6 +9,8 @@ const AdminDashboard = ({ onLogout }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -71,6 +73,9 @@ const AdminDashboard = ({ onLogout }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return; // Prevent multiple submissions
+    
+    setSaving(true);
     const productData = {
       name: formData.name,
       description: formData.description,
@@ -100,6 +105,8 @@ const AdminDashboard = ({ onLogout }) => {
       });
     } catch (error) {
       console.error('Error saving product:', error);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -119,16 +126,21 @@ const AdminDashboard = ({ onLogout }) => {
 
   const handleDelete = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
+      setDeletingId(productId);
       try {
         await deleteDoc(doc(db, 'product', productId));
         await loadProducts();
       } catch (error) {
         console.error('Error deleting product:', error);
+      } finally {
+        setDeletingId(null);
       }
     }
   };
 
   const toggleActive = async (productId) => {
+    if (deletingId === productId) return; // Prevent if already deleting
+    
     const product = products.find(p => p.id === productId);
     if (product) {
       try {
@@ -290,13 +302,21 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               <div className="form-actions">
-                <button type="submit" className="save-btn">
-                  {editingProduct ? 'Update' : 'Save'}
+                <button type="submit" className="save-btn" disabled={saving}>
+                  {saving ? (
+                    <>
+                      <div className="spinner-small"></div>
+                      {editingProduct ? 'Updating...' : 'Saving...'}
+                    </>
+                  ) : (
+                    editingProduct ? 'Update' : 'Save'
+                  )}
                 </button>
                 <button
                   type="button"
                   onClick={resetForm}
                   className="cancel-btn"
+                  disabled={saving}
                 >
                   Cancel
                 </button>
@@ -353,8 +373,16 @@ const AdminDashboard = ({ onLogout }) => {
                       <button
                         onClick={() => handleDelete(product.id)}
                         className="delete-btn"
+                        disabled={deletingId === product.id}
                       >
-                        Delete
+                        {deletingId === product.id ? (
+                          <>
+                            <div className="spinner-small"></div>
+                            Deleting...
+                          </>
+                        ) : (
+                          'Delete'
+                        )}
                       </button>
                     </div>
                   </td>
