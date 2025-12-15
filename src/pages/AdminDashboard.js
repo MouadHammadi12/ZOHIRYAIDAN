@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { db } from '../firebase';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import './AdminDashboard.css';
 
 const AdminDashboard = ({ onLogout }) => {
@@ -20,62 +22,16 @@ const AdminDashboard = ({ onLogout }) => {
     loadProducts();
   }, []);
 
-  const loadProducts = () => {
-    // Load from localStorage
-    const savedProducts = localStorage.getItem('products');
-    if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
-    } else {
-      // Default products
-      const defaultProducts = [
-        {
-          id: 1,
-          name: '1 Month Subscription',
-          description: 'Perfect for trying out our service. Access to all channels and movies for one month.',
-          image: null,
-          price: 50.00,
-          channels: 45000,
-          is_active: true
-        },
-        {
-          id: 2,
-          name: '3 Months Subscription',
-          description: 'Best value for short-term users. Enjoy 3 months of premium IPTV service with 24/7 support.',
-          image: null,
-          price: 120.00,
-          channels: 45000,
-          is_active: true
-        },
-        {
-          id: 3,
-          name: '6 Months Subscription',
-          description: 'Great savings for long-term users. Get 6 months of unlimited access to all channels and movies.',
-          image: null,
-          price: 200.00,
-          channels: 45000,
-          is_active: true
-        },
-        {
-          id: 4,
-          name: '1 Year Subscription',
-          description: 'The best deal! Get a full year of premium IPTV service with the lowest monthly price.',
-          image: null,
-          price: 350.00,
-          channels: 45000,
-          is_active: true
-        }
-      ];
-      setProducts(defaultProducts);
-      localStorage.setItem('products', JSON.stringify(defaultProducts));
+  const loadProducts = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'product'));
+      const productsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setProducts(productsData);
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
-
-  const saveProducts = (updatedProducts) => {
-    localStorage.setItem('products', JSON.stringify(updatedProducts));
-    setProducts(updatedProducts);
-    // Trigger page reload to update Home page
-    window.dispatchEvent(new Event('productsUpdated'));
   };
 
   const handleImageUpload = (e) => {
@@ -113,47 +69,38 @@ const AdminDashboard = ({ onLogout }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let updatedProducts;
+    const productData = {
+      name: formData.name,
+      description: formData.description,
+      image: formData.image && formData.image.trim() !== '' ? formData.image : null,
+      price: parseFloat(formData.price),
+      channels: parseInt(formData.channels) || null,
+      is_active: formData.is_active
+    };
 
-    if (editingProduct) {
-      // Update existing product
-      updatedProducts = products.map(p =>
-        p.id === editingProduct.id
-          ? { 
-              ...formData, 
-              id: editingProduct.id, 
-              price: parseFloat(formData.price), 
-              channels: parseInt(formData.channels) || null,
-              image: formData.image && formData.image.trim() !== '' ? formData.image : null
-            }
-          : p
-      );
-    } else {
-      // Add new product
-      const newProduct = {
-        ...formData,
-        id: Date.now(),
-        price: parseFloat(formData.price),
-        channels: parseInt(formData.channels) || null,
-        image: formData.image && formData.image.trim() !== '' ? formData.image : null
-      };
-      updatedProducts = [...products, newProduct];
+    try {
+      if (editingProduct) {
+        await updateDoc(doc(db, 'product', editingProduct.id), productData);
+      } else {
+        await addDoc(collection(db, 'product'), productData);
+      }
+      await loadProducts();
+      setShowForm(false);
+      setEditingProduct(null);
+      setImagePreview(null);
+      setFormData({
+        name: '',
+        description: '',
+        image: '',
+        price: '',
+        channels: '',
+        is_active: true
+      });
+    } catch (error) {
+      console.error('Error saving product:', error);
     }
-
-    saveProducts(updatedProducts);
-    setShowForm(false);
-    setEditingProduct(null);
-    setImagePreview(null);
-    setFormData({
-      name: '',
-      description: '',
-      image: '',
-      price: '',
-      channels: '',
-      is_active: true
-    });
   };
 
   const handleEdit = (product) => {
@@ -170,18 +117,27 @@ const AdminDashboard = ({ onLogout }) => {
     setShowForm(true);
   };
 
-  const handleDelete = (productId) => {
+  const handleDelete = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      const updatedProducts = products.filter(p => p.id !== productId);
-      saveProducts(updatedProducts);
+      try {
+        await deleteDoc(doc(db, 'product', productId));
+        await loadProducts();
+      } catch (error) {
+        console.error('Error deleting product:', error);
+      }
     }
   };
 
-  const toggleActive = (productId) => {
-    const updatedProducts = products.map(p =>
-      p.id === productId ? { ...p, is_active: !p.is_active } : p
-    );
-    saveProducts(updatedProducts);
+  const toggleActive = async (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      try {
+        await updateDoc(doc(db, 'product', productId), { is_active: !product.is_active });
+        await loadProducts();
+      } catch (error) {
+        console.error('Error updating product:', error);
+      }
+    }
   };
 
   const resetForm = () => {
