@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useCart } from '../contexts/CartContext';
 import './Navbar.css';
 
 const Navbar = ({ setCurrentPage, isAdmin }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { getCartItemCount, toggleCart } = useCart();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -55,16 +57,37 @@ const Navbar = ({ setCurrentPage, isAdmin }) => {
           <h2>ZOHIR SHOP</h2>
         </a>
         
-        {/* Hamburger Button for Mobile */}
-        <button 
-          className={`hamburger ${isMenuOpen ? 'active' : ''}`}
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        {/* Hamburger Button for Mobile and Cart */}
+        <div className="navbar-actions">
+          {/* Cart Button - Always visible */}
+          <button
+            className="cart-button"
+            onClick={() => {
+              toggleCart();
+              closeMenu();
+            }}
+            aria-label="Shopping cart"
+          >
+            <svg className="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="m1 1 4 4h15l-1 7H6"></path>
+            </svg>
+            {getCartItemCount() > 0 && (
+              <span className="cart-count">{getCartItemCount()}</span>
+            )}
+          </button>
+
+          <button 
+            className={`hamburger ${isMenuOpen ? 'active' : ''}`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
 
         {/* Menu */}
         <div className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
@@ -95,6 +118,7 @@ const Navbar = ({ setCurrentPage, isAdmin }) => {
           >
             Contact Us
           </a>
+          
           {isAdmin ? (
             <>
               <a 

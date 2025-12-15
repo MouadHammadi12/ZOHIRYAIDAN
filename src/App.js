@@ -5,7 +5,9 @@ import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import Footer from './components/Footer';
+import Cart from './components/Cart';
 import { ProductsProvider } from './contexts/ProductsContext';
+import { CartProvider } from './contexts/CartContext';
 import './App.css';
 
 function App() {
@@ -94,11 +96,14 @@ function App() {
 
   return (
     <ProductsProvider>
-      <div className="App">
-        <Navbar setCurrentPage={setCurrentPage} isAdmin={isAdmin} />
-        {renderPage()}
-        {currentPage !== 'admin' && currentPage !== 'admin-login' && <Footer />}
-      </div>
+      <CartProvider>
+        <div className="App">
+          <Navbar setCurrentPage={setCurrentPage} isAdmin={isAdmin} />
+          {renderPage()}
+          {currentPage !== 'admin' && currentPage !== 'admin-login' && <Footer />}
+          <Cart />
+        </div>
+      </CartProvider>
     </ProductsProvider>
   );
 }
