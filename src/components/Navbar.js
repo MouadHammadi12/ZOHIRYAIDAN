@@ -1,34 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import './Navbar.css';
 
-const Navbar = ({ setCurrentPage, isAdmin }) => {
+const Navbar = ({ isAdmin }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getCartItemCount, toggleCart } = useCart();
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.slice(1);
-      if (hash === 'contact') {
-        setCurrentPage('contact');
-      } else if (hash === 'admin' || hash === 'admin/login') {
-        if (isAdmin) {
-          setCurrentPage('admin');
-        } else {
-          setCurrentPage('admin-login');
-        }
-      } else {
-        setCurrentPage('home');
-      }
-    };
-
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, [setCurrentPage, isAdmin]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -38,34 +15,28 @@ const Navbar = ({ setCurrentPage, isAdmin }) => {
     setIsMenuOpen(false);
   };
 
-  const handleNavClick = (hash) => {
-    window.location.hash = hash;
+  const handleCartClick = () => {
+    toggleCart();
     closeMenu();
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <a 
-          href="#home" 
-          className="navbar-logo" 
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavClick('home');
-          }}
+        <Link
+          to="/"
+          className="navbar-logo"
+          onClick={closeMenu}
         >
           <h2>ZOHIR SHOP</h2>
-        </a>
-        
+        </Link>
+
         {/* Hamburger Button for Mobile and Cart */}
         <div className="navbar-actions">
           {/* Cart Button - Always visible */}
           <button
             className="cart-button"
-            onClick={() => {
-              toggleCart();
-              closeMenu();
-            }}
+            onClick={handleCartClick}
             aria-label="Shopping cart"
           >
             <svg className="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -78,7 +49,7 @@ const Navbar = ({ setCurrentPage, isAdmin }) => {
             )}
           </button>
 
-          <button 
+          <button
             className={`hamburger ${isMenuOpen ? 'active' : ''}`}
             onClick={toggleMenu}
             aria-label="Toggle menu"
@@ -91,58 +62,44 @@ const Navbar = ({ setCurrentPage, isAdmin }) => {
 
         {/* Menu */}
         <div className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
-          <a 
-            href="#home" 
+          <Link
+            to="/"
             className="navbar-link"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick('home');
-            }}
+            onClick={closeMenu}
           >
             Home
-          </a>
-          <a 
-            href="#products" 
+          </Link>
+          <a
+            href="#products"
             className="navbar-link"
             onClick={closeMenu}
           >
             Subscriptions
           </a>
-          <a 
-            href="#contact" 
+          <Link
+            to="/contact"
             className="navbar-link"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick('contact');
-            }}
+            onClick={closeMenu}
           >
             Contact Us
-          </a>
-          
+          </Link>
+
           {isAdmin ? (
-            <>
-              <a 
-                href="#admin" 
-                className="navbar-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick('admin');
-                }}
-              >
-                Admin
-              </a>
-            </>
-          ) : (
-            <a 
-              href="#admin/login" 
+            <Link
+              to="/admin"
               className="navbar-link"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('admin/login');
-              }}
+              onClick={closeMenu}
+            >
+              Admin
+            </Link>
+          ) : (
+            <Link
+              to="/admin/login"
+              className="navbar-link"
+              onClick={closeMenu}
             >
               Admin Login
-            </a>
+            </Link>
           )}
         </div>
       </div>
