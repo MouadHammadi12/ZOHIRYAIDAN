@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useProducts } from '../contexts/ProductsContext';
 import ImageSlider from '../components/ImageSlider';
 import ProductCard from '../components/ProductCard';
+import { db } from '../firebase';
+import { doc, updateDoc, increment, setDoc } from 'firebase/firestore';
 import './Home.css';
 
 const Home = () => {
@@ -14,6 +16,20 @@ const Home = () => {
     };
     
     window.addEventListener('productsUpdated', handleProductsUpdate);
+
+    // Increment visit counter
+    const incrementVisits = async () => {
+      const docRef = doc(db, 'stats', 'visits');
+      try {
+        await updateDoc(docRef, {
+          count: increment(1)
+        });
+      } catch (error) {
+        // If document doesn't exist, create it
+        await setDoc(docRef, { count: 1 });
+      }
+    };
+    incrementVisits();
     
     return () => {
       window.removeEventListener('productsUpdated', handleProductsUpdate);

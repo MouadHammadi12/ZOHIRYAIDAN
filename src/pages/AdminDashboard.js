@@ -1,16 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc } from 'firebase/firestore';
 import { useProducts } from '../contexts/ProductsContext';
 import './AdminDashboard.css';
 
-const AdminDashboard = ({ onLogout }) => {
+const ProductCardItem = React.memo(({ product, onEdit, onDelete, onToggleActive, deletingId }) => (
+  <div className="product-card">
+    <div className="card-header">
+      {product.image ? (
+        <img src={product.image} alt={product.name} className="card-image" />
+      ) : (
+        <div className="card-image-placeholder">📺</div>
+      )}
+      <div className="card-title-section">
+        <h3 className="card-title">{product.name}</h3>
+        <span className="card-price">{product.price.toFixed(2)} €</span>
+      </div>
+    </div>
+    
+    <div className="card-body">
+      {product.description && (
+        <p className="card-description">{product.description}</p>
+      )}
+      <div className="card-details">
+        <span className="card-channels">
+          Channels: {product.channels ? product.channels.toLocaleString() : '-'}
+        </span>
+        <button
+          onClick={() => onToggleActive(product.id)}
+          className={`status-btn ${product.is_active ? 'active' : 'inactive'}`}
+        >
+          {product.is_active ? 'Active' : 'Inactive'}
+        </button>
+      </div>
+    </div>
+
+    <div className="card-actions">
+      <button
+        onClick={() => onEdit(product)}
+        className="edit-btn"
+      >
+        Edit
+      </button>
+      <button
+        onClick={() => onDelete(product.id)}
+        className="delete-btn"
+        disabled={deletingId === product.id}
+      >
+        {deletingId === product.id ? (
+          <>
+            <div className="spinner-small"></div>
+            Deleting...
+          </>
+        ) : (
+          'Delete'
+        )}
+      </button>
+    </div>
+  </div>
+));
+
+const AdminDashboard = React.memo(({ onLogout }) => {
   const { products, loading: globalLoading, refreshProducts } = useProducts();
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [totalVisits, setTotalVisits] = useState(0);
+  const [showProducts, setShowProducts] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -24,14 +82,36 @@ const AdminDashboard = ({ onLogout }) => {
     // Products are loaded globally by ProductsProvider
   }, []);
 
+  const stats = useMemo(() => {
+    if (globalLoading) return { totalProducts: 0, activeProducts: 0, totalVisits: 0 };
+    const total = products.length;
+    const active = products.filter(p => p.is_active).length;
+    return { totalProducts: total, activeProducts: active, totalVisits };
+  }, [products, globalLoading, totalVisits]);
+
+  useEffect(() => {
+    const fetchVisits = async () => {
+      try {
+        const docRef = doc(db, 'stats', 'visits');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setTotalVisits(docSnap.data().count || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching visits:', error);
+      }
+    };
+    fetchVisits();
+  }, []);
+
   // Remove local loadProducts function since we use global state
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = useCallback((e) => {
     const file = e.target.files[0];
     if (file) {
       // Check file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert('Image size should be less than 2MB');
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
         return;
       }
 
@@ -44,24 +124,24 @@ const AdminDashboard = ({ onLogout }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
-        setFormData({ ...formData, image: base64String });
+        setFormData(prev => ({ ...prev, image: base64String }));
         setImagePreview(base64String);
       };
       reader.readAsDataURL(file);
     }
-  };
+  }, []);
 
-  const handleImageUrlChange = (e) => {
+  const handleImageUrlChange = useCallback((e) => {
     const url = e.target.value;
-    setFormData({ ...formData, image: url });
+    setFormData(prev => ({ ...prev, image: url }));
     if (url && url.trim() !== '') {
       setImagePreview(url);
     } else {
       setImagePreview(null);
     }
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     console.log('handleSubmit called, editingProduct:', editingProduct);
     if (saving) return; // Prevent multiple submissions
@@ -115,9 +195,9 @@ const AdminDashboard = ({ onLogout }) => {
     } finally {
       setSaving(false);
     }
-  };
+  }, [saving, editingProduct, formData, refreshProducts]);
 
-  const handleEdit = (product) => {
+  const handleEdit = useCallback((product) => {
     setEditingProduct(product);
     setFormData({
       name: product.name,
@@ -129,9 +209,9 @@ const AdminDashboard = ({ onLogout }) => {
     });
     setImagePreview(product.image || null);
     setShowForm(true);
-  };
+  }, []);
 
-  const handleDelete = async (productId) => {
+  const handleDelete = useCallback(async (productId) => {
     console.log('handleDelete called with productId:', productId);
     if (window.confirm('Are you sure you want to delete this product?')) {
       setDeletingId(productId);
@@ -158,9 +238,9 @@ const AdminDashboard = ({ onLogout }) => {
         setDeletingId(null);
       }
     }
-  };
+  }, [refreshProducts]);
 
-  const clearAllProducts = async () => {
+  const clearAllProducts = useCallback(async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'product'));
       const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
@@ -173,9 +253,13 @@ const AdminDashboard = ({ onLogout }) => {
       console.error('Error clearing products:', error);
       alert('Error clearing products: ' + error.message);
     }
-  };
+  }, [refreshProducts]);
 
-  const toggleActive = async (productId) => {
+  const toggleProducts = useCallback(() => {
+    setShowProducts(prev => !prev);
+  }, []);
+
+  const toggleActive = useCallback(async (productId) => {
     if (deletingId === productId) return; // Prevent if already deleting
     
     const product = products.find(p => p.id === productId);
@@ -198,9 +282,9 @@ const AdminDashboard = ({ onLogout }) => {
         alert('Error updating product status: ' + error.message);
       }
     }
-  };
+  }, [deletingId, products, refreshProducts]);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setShowForm(false);
     setEditingProduct(null);
     setImagePreview(null);
@@ -212,7 +296,7 @@ const AdminDashboard = ({ onLogout }) => {
       channels: '',
       is_active: true
     });
-  };
+  }, []);
 
   return (
     <div className="admin-dashboard">
@@ -241,7 +325,7 @@ const AdminDashboard = ({ onLogout }) => {
             className="refresh-btn"
             onClick={() => refreshProducts()}
           >
-            🔄 Refresh
+             Refresh
           </button>
           <button 
             className="clear-btn"
@@ -251,7 +335,13 @@ const AdminDashboard = ({ onLogout }) => {
               }
             }}
           >
-            🗑️ Clear All
+             Delete All
+          </button>
+          <button 
+            className="toggle-btn"
+            onClick={toggleProducts}
+          >
+            {showProducts ? 'Hide Products' : 'Show Products'}
           </button>
           <button onClick={onLogout} className="logout-btn">
             Logout
@@ -381,14 +471,31 @@ const AdminDashboard = ({ onLogout }) => {
         </div>
       )}
 
-      <div className="products-list">
-        {globalLoading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Loading products...</p>
-          </div>
+      <div className="stats-section">
+        <div className="stat-card">
+          <h3>Total Products</h3>
+          <p>{stats.totalProducts}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Active Products</h3>
+          <p>{stats.activeProducts}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Total Visits</h3>
+          <p>{stats.totalVisits}</p>
+        </div>
+      </div>
+
+      {showProducts && (
+        <div className="products-list">
+          {globalLoading ? (
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Loading products...</p>
+            </div>
         ) : products.length > 0 ? (
-          <table className="products-table">
+          <>
+            <table className="products-table">
             <thead>
               <tr>
                 <th>Image</th>
@@ -450,14 +557,30 @@ const AdminDashboard = ({ onLogout }) => {
               ))}
             </tbody>
           </table>
+
+          {/* Mobile Cards Layout */}
+          <div className="products-cards">
+            {products.map((product) => (
+              <ProductCardItem
+                key={product.id}
+                product={product}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onToggleActive={toggleActive}
+                deletingId={deletingId}
+              />
+            ))}
+          </div>
+          </>
         ) : (
           <div className="no-products">
             <p>No products found. Add a product to get started.</p>
           </div>
         )}
       </div>
+      )}
     </div>
   );
-};
+});
 
 export default AdminDashboard;
