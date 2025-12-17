@@ -119,7 +119,7 @@ const AdminDashboard = React.memo(({ onLogout }) => {
   const handleImageUpload = useCallback((e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (max 2MB)
+      // Check file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('Image size should be less than 5MB');
         return;
@@ -391,7 +391,7 @@ const AdminDashboard = React.memo(({ onLogout }) => {
                   onChange={handleImageUpload}
                   className="file-input"
                 />
-                <small className="file-hint">Max size: 2MB (JPG, PNG, etc.)</small>
+                <small className="file-hint">Max size: 5MB (JPG, PNG, etc.)</small>
               </div>
 
               <div className="form-group">

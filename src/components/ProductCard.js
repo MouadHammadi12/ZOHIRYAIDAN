@@ -25,22 +25,6 @@ const ProductCard = ({ product }) => {
     }, 2000);
   };
 
-  // Calculate price per month based on product name
-  const getPricePerMonth = () => {
-    if (product.name.includes('1 Month')) {
-      return product.price;
-    } else if (product.name.includes('3 Months')) {
-      return (product.price / 3).toFixed(2);
-    } else if (product.name.includes('6 Months')) {
-      return (product.price / 6).toFixed(2);
-    } else if (product.name.includes('1 Year')) {
-      return (product.price / 12).toFixed(2);
-    }
-    return product.price;
-  };
-
-  const showPricePerMonth = !product.name.includes('1 Month');
-
   return (
     <div className="product-card">
       {/* Image Section at Top */}
@@ -69,11 +53,6 @@ const ProductCard = ({ product }) => {
           <div className="price-main">
             <span className="price-amount">{product.price.toFixed(2)} €</span>
           </div>
-          {showPricePerMonth && (
-            <div className="price-per-month">
-              {getPricePerMonth()} MAD / month
-            </div>
-          )}
         </div>
 
         {product.channels && (

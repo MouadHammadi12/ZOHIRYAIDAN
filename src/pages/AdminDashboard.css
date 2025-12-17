@@ -324,9 +324,9 @@
 
 .cancel-btn {
   flex: 1;
-  background: rgba(194, 26, 26, 0.747);
-  color: #e6e6e6;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #dc2626; /* red */
+  color: #f9fafb;
+  border: 1px solid rgba(248, 113, 113, 0.6);
   padding: 1rem;
   border-radius: 12px;
   font-size: 1rem;
@@ -337,9 +337,10 @@
 }
 
 .cancel-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  /* khalliha dayman 7mra f hover */
+  background: #b91c1c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(248, 113, 113, 0.4);
 }
 
 .products-list {
