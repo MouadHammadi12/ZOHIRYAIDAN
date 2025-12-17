@@ -5,8 +5,9 @@ import { getFirestore } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// NOTE: apiKey jay mn environment variable bach ma ybqach maktoub direct f code
 const firebaseConfig = {
-  apiKey: "AIzaSyAtEdHABWC5NL2LuIkMnk0_8GXxNlGiLcI",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "zohirzaidan-c8ab4.firebaseapp.com",
   projectId: "zohirzaidan-c8ab4",
   storageBucket: "zohirzaidan-c8ab4.firebasestorage.app",
