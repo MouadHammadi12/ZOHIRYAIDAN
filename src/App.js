@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import Cart from './components/Cart';
 import { ProductsProvider } from './contexts/ProductsContext';
 import { CartProvider } from './contexts/CartContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import './App.css';
 
 // Protected Route component for admin routes
@@ -97,34 +98,36 @@ function App() {
 
   return (
     <Router>
-      <ProductsProvider>
-        <CartProvider>
-          <div className="App">
-            <ScrollToTop />
-            <Navbar isAdmin={isAdmin} />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route
-                path="/admin/login"
-                element={<AdminLogin onLogin={handleAdminLogin} />}
-              />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute isAdmin={isAdmin}>
-                    <AdminDashboard onLogout={handleAdminLogout} />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Redirect any unknown routes to home */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            <Footer />
-            <Cart />
-          </div>
-        </CartProvider>
-      </ProductsProvider>
+      <LanguageProvider>
+        <ProductsProvider>
+          <CartProvider>
+            <div className="App">
+              <ScrollToTop />
+              <Navbar isAdmin={isAdmin} />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route
+                  path="/admin/login"
+                  element={<AdminLogin onLogin={handleAdminLogin} />}
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute isAdmin={isAdmin}>
+                      <AdminDashboard onLogout={handleAdminLogout} />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Redirect any unknown routes to home */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+              <Footer />
+              <Cart />
+            </div>
+          </CartProvider>
+        </ProductsProvider>
+      </LanguageProvider>
     </Router>
   );
 }

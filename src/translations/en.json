@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "home": "Home",
+    "subscriptions": "Subscriptions",
+    "contact": "Contact Us",
+    "admin": "Admin",
+    "adminLogin": "Admin Login",
+    "language": "Language"
+  },
+  "home": {
+    "title": "Choose Your Subscription",
+    "searchPlaceholder": "Search subscriptions...",
+    "loading": "Loading products...",
+    "noProducts": "No products available at the moment."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Error sending message. Please try again."
+  },
+  "admin": {
+    "login": "Admin Login",
+    "email": "Email",
+    "password": "Password",
+    "loginBtn": "Login",
+    "loggingIn": "Logging in...",
+    "invalidCredentials": "Invalid email or password",
+    "dashboard": "Admin Dashboard",
+    "addProduct": "Add Product",
+    "editProduct": "Edit Product",
+    "refresh": "Refresh",
+    "deleteAll": "Delete All",
+    "resetVisits": "Reset Visits",
+    "logout": "Logout",
+    "totalProducts": "Total Products",
+    "activeProducts": "Active Products",
+    "totalVisits": "Total Visits",
+    "showProducts": "Show Products",
+    "hideProducts": "Hide Products"
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "subscribeNow": "Subscribe Now",
+    "channels": "Channels",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "close": "Close"
+  }
+}
+

@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "subscriptions": "الاشتراكات",
+    "contact": "اتصل بنا",
+    "admin": "المسؤول",
+    "adminLogin": "تسجيل دخول المسؤول",
+    "language": "اللغة"
+  },
+  "home": {
+    "title": "اختر اشتراكك",
+    "searchPlaceholder": "ابحث عن الاشتراكات...",
+    "loading": "جاري تحميل المنتجات...",
+    "noProducts": "لا توجد منتجات متاحة في الوقت الحالي."
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "message": "الرسالة",
+    "send": "إرسال",
+    "sending": "جاري الإرسال...",
+    "success": "تم إرسال الرسالة بنجاح!",
+    "error": "خطأ في إرسال الرسالة. يرجى المحاولة مرة أخرى."
+  },
+  "admin": {
+    "login": "تسجيل دخول المسؤول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "loginBtn": "تسجيل الدخول",
+    "loggingIn": "جاري تسجيل الدخول...",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "dashboard": "لوحة تحكم المسؤول",
+    "addProduct": "إضافة منتج",
+    "editProduct": "تعديل المنتج",
+    "refresh": "تحديث",
+    "deleteAll": "حذف الكل",
+    "resetVisits": "إعادة تعيين الزيارات",
+    "logout": "تسجيل الخروج",
+    "totalProducts": "إجمالي المنتجات",
+    "activeProducts": "المنتجات النشطة",
+    "totalVisits": "إجمالي الزيارات",
+    "showProducts": "عرض المنتجات",
+    "hideProducts": "إخفاء المنتجات"
+  },
+  "product": {
+    "addToCart": "أضف إلى السلة",
+    "subscribeNow": "اشترك الآن",
+    "channels": "القنوات",
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "cart": {
+    "title": "سلة التسوق",
+    "empty": "سلة التسوق فارغة",
+    "total": "الإجمالي",
+    "checkout": "الدفع",
+    "close": "إغلاق"
+  }
+}
+

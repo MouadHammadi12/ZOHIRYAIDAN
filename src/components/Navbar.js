@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import './Navbar.css';
 
 const Navbar = ({ isAdmin }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const { getCartItemCount, toggleCart } = useCart();
+  const { language, changeLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -61,11 +64,55 @@ const Navbar = ({ isAdmin }) => {
           className="navbar-logo"
           onClick={closeMenu}
         >
-          <h2>ZOHIR SHOP</h2>
+          <h2>ZOHAIR SHOP</h2>
         </Link>
 
         {/* Hamburger Button for Mobile and Cart */}
         <div className="navbar-actions">
+          {/* Language Toggle - Small Dropdown */}
+          <div className="language-toggle">
+            <button
+              className="lang-btn-small"
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              aria-label="Change language"
+            >
+              {language === 'en' && '🇬🇧'}
+              {language === 'fr' && '🇫🇷'}
+              {language === 'ar' && '🇲🇦'}
+            </button>
+            {showLangMenu && (
+              <div className="lang-menu-small" onClick={() => setShowLangMenu(false)}>
+                <button
+                  className={`lang-option-small ${language === 'en' ? 'active' : ''}`}
+                  onClick={() => {
+                    changeLanguage('en');
+                    setShowLangMenu(false);
+                  }}
+                >
+                  🇬🇧 EN
+                </button>
+                <button
+                  className={`lang-option-small ${language === 'fr' ? 'active' : ''}`}
+                  onClick={() => {
+                    changeLanguage('fr');
+                    setShowLangMenu(false);
+                  }}
+                >
+                  🇫🇷 FR
+                </button>
+                <button
+                  className={`lang-option-small ${language === 'ar' ? 'active' : ''}`}
+                  onClick={() => {
+                    changeLanguage('ar');
+                    setShowLangMenu(false);
+                  }}
+                >
+                  🇲🇦 AR
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Cart Button - Always visible */}
           <button
             className="cart-button"
@@ -95,26 +142,60 @@ const Navbar = ({ isAdmin }) => {
 
         {/* Menu */}
         <div className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
+          {/* Language Toggle for Mobile */}
+          <div className="language-toggle-mobile">
+            <div className="lang-label-mobile">{t('nav.language') || 'Language'}:</div>
+            <div className="lang-buttons-mobile">
+              <button
+                className={`lang-btn-mobile ${language === 'en' ? 'active' : ''}`}
+                onClick={() => {
+                  changeLanguage('en');
+                  closeMenu();
+                }}
+              >
+                🇬🇧 EN
+              </button>
+              <button
+                className={`lang-btn-mobile ${language === 'fr' ? 'active' : ''}`}
+                onClick={() => {
+                  changeLanguage('fr');
+                  closeMenu();
+                }}
+              >
+                🇫🇷 FR
+              </button>
+              <button
+                className={`lang-btn-mobile ${language === 'ar' ? 'active' : ''}`}
+                onClick={() => {
+                  changeLanguage('ar');
+                  closeMenu();
+                }}
+              >
+                🇲🇦 AR
+              </button>
+            </div>
+          </div>
+
           <a
             href="/"
             className="navbar-link"
             onClick={handleHomeClick}
           >
-            Home
+            {t('nav.home')}
           </a>
           <a
             href="#products"
             className="navbar-link"
             onClick={handleSubscriptionsClick}
           >
-            Subscriptions
+            {t('nav.subscriptions')}
           </a>
           <Link
             to="/contact"
             className="navbar-link"
             onClick={closeMenu}
           >
-            Contact Us
+            {t('nav.contact')}
           </Link>
 
           {isAdmin ? (
@@ -123,7 +204,7 @@ const Navbar = ({ isAdmin }) => {
               className="navbar-link"
               onClick={closeMenu}
             >
-              Admin
+              {t('nav.admin')}
             </Link>
           ) : (
             <Link
@@ -131,7 +212,7 @@ const Navbar = ({ isAdmin }) => {
               className="navbar-link"
               onClick={closeMenu}
             >
-              Admin Login
+              {t('nav.adminLogin')}
             </Link>
           )}
         </div>

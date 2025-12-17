@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "subscriptions": "Abonnements",
+    "contact": "Contactez-nous",
+    "admin": "Admin",
+    "adminLogin": "Connexion Admin",
+    "language": "Langue"
+  },
+  "home": {
+    "title": "Choisissez Votre Abonnement",
+    "searchPlaceholder": "Rechercher des abonnements...",
+    "loading": "Chargement des produits...",
+    "noProducts": "Aucun produit disponible pour le moment."
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "name": "Nom",
+    "email": "Email",
+    "message": "Message",
+    "send": "Envoyer",
+    "sending": "Envoi en cours...",
+    "success": "Message envoyé avec succès !",
+    "error": "Erreur lors de l'envoi du message. Veuillez réessayer."
+  },
+  "admin": {
+    "login": "Connexion Admin",
+    "email": "Email",
+    "password": "Mot de passe",
+    "loginBtn": "Se connecter",
+    "loggingIn": "Connexion en cours...",
+    "invalidCredentials": "Email ou mot de passe invalide",
+    "dashboard": "Tableau de bord Admin",
+    "addProduct": "Ajouter un produit",
+    "editProduct": "Modifier le produit",
+    "refresh": "Actualiser",
+    "deleteAll": "Tout supprimer",
+    "resetVisits": "Réinitialiser les visites",
+    "logout": "Déconnexion",
+    "totalProducts": "Total des produits",
+    "activeProducts": "Produits actifs",
+    "totalVisits": "Total des visites",
+    "showProducts": "Afficher les produits",
+    "hideProducts": "Masquer les produits"
+  },
+  "product": {
+    "addToCart": "Ajouter au panier",
+    "subscribeNow": "S'abonner maintenant",
+    "channels": "Chaînes",
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "total": "Total",
+    "checkout": "Commander",
+    "close": "Fermer"
+  }
+}
+

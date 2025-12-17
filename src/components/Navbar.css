@@ -39,6 +39,77 @@
   gap: 1rem;
 }
 
+/* Language Toggle - Small Dropdown */
+.language-toggle {
+  position: relative;
+}
+
+/* Hide mobile language toggle on desktop */
+.language-toggle-mobile {
+  display: none;
+}
+
+.lang-btn-small {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+}
+
+.lang-btn-small:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.lang-menu-small {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 80px;
+  z-index: 1002;
+  overflow: hidden;
+}
+
+.lang-option-small {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.lang-option-small:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-option-small.active {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
 /* Hamburger Menu Button */
 .hamburger {
   display: none;
@@ -201,6 +272,16 @@
 
 /* Mobile Styles */
 @media (max-width: 768px) {
+  /* Hide language toggle from navbar-actions on mobile */
+  .language-toggle {
+    display: none;
+  }
+
+  /* Show mobile language toggle in menu */
+  .language-toggle-mobile {
+    display: flex;
+  }
+
   .hamburger {
     display: flex;
   }
@@ -222,6 +303,57 @@
 
   .navbar-menu.active {
     transform: translateX(0);
+  }
+
+  /* Language Toggle for Mobile */
+  .language-toggle-mobile {
+    width: 100%;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .lang-label-mobile {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .lang-buttons-mobile {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .lang-btn-mobile {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.6rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .lang-btn-mobile:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lang-btn-mobile.active {
+    background: rgba(59, 130, 246, 0.3);
+    border-color: #3b82f6;
+    color: #60a5fa;
   }
 
   .navbar-link {
@@ -270,6 +402,16 @@
   .navbar-menu {
     padding: 1rem;
     top: 60px;
+  }
+
+  .language-toggle-mobile {
+    padding: 0.75rem 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .lang-btn-mobile {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.8rem;
   }
 
   .navbar-link {

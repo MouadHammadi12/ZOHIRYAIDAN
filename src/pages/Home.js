@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useProducts } from '../contexts/ProductsContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import ImageSlider from '../components/ImageSlider';
 import ProductCard from '../components/ProductCard';
 import { db } from '../firebase';
@@ -8,6 +9,7 @@ import './Home.css';
 
 const Home = () => {
   const { products, loading, refreshProducts } = useProducts();
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -63,12 +65,12 @@ const Home = () => {
       <ImageSlider />
 
       <div className="products-section" id="products">
-        <h2 className="section-title">Choose Your Subscription</h2>
+        <h2 className="section-title">{t('home.title')}</h2>
 
         <div className="products-search">
           <input
             type="text"
-            placeholder="Search subscriptions..."
+            placeholder={t('home.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -78,7 +80,7 @@ const Home = () => {
           {loading ? (
             <div className="loading-container">
               <div className="spinner"></div>
-              <p>Loading products...</p>
+              <p>{t('home.loading')}</p>
             </div>
           ) : filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
@@ -89,7 +91,7 @@ const Home = () => {
             ))
           ) : (
             <div className="no-products">
-              <p>No products available at the moment.</p>
+              <p>{t('home.noProducts')}</p>
             </div>
           )}
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { db } from '../firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { useProducts } from '../contexts/ProductsContext';
 import './AdminDashboard.css';
 
@@ -112,6 +112,20 @@ const AdminDashboard = React.memo(({ onLogout }) => {
       }
     };
     fetchVisits();
+  }, []);
+
+  const resetVisits = useCallback(async () => {
+    if (window.confirm('Are you sure you want to reset visits counter to 0?')) {
+      try {
+        const docRef = doc(db, 'stats', 'visits');
+        await setDoc(docRef, { count: 0 });
+        setTotalVisits(0);
+        alert('Visits counter reset to 0');
+      } catch (error) {
+        console.error('Error resetting visits:', error);
+        alert('Error resetting visits: ' + error.message);
+      }
+    }
   }, []);
 
   // Remove local loadProducts function since we use global state
@@ -352,6 +366,13 @@ const AdminDashboard = React.memo(({ onLogout }) => {
             onClick={toggleProducts}
           >
             {showProducts ? 'Hide Products' : 'Show Products'}
+          </button>
+          <button 
+            className="refresh-btn"
+            onClick={resetVisits}
+            title="Reset visits counter to 0"
+          >
+            Reset Visits
           </button>
           <button onClick={onLogout} className="logout-btn">
             Logout
