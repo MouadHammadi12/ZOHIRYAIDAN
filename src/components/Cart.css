@@ -274,27 +274,12 @@
 
 .cart-actions {
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
 }
 
-.clear-cart-btn {
-  flex: 1;
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 0.875rem 1rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.clear-cart-btn:hover {
-  background: #dc2626;
-}
-
 .checkout-btn {
-  flex: 2;
+  width: 100%;
   background: #25d366;
   color: white;
   border: none;
@@ -311,6 +296,22 @@
 
 .checkout-btn:hover {
   background: #128c7e;
+}
+
+.clear-cart-btn {
+  width: 100%;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.875rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clear-cart-btn:hover {
+  background: #dc2626;
 }
 
 .whatsapp-icon {
@@ -340,6 +341,12 @@
 
   .cart-actions {
     flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .checkout-btn,
+  .clear-cart-btn {
+    width: 100%;
   }
 
   .cart-total {
