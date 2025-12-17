@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useProducts } from '../contexts/ProductsContext';
 import ImageSlider from '../components/ImageSlider';
 import ProductCard from '../components/ProductCard';
@@ -8,6 +8,7 @@ import './Home.css';
 
 const Home = () => {
   const { products, loading, refreshProducts } = useProducts();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     // Listen for products updates from admin
@@ -37,7 +38,24 @@ const Home = () => {
   }, [refreshProducts]);
 
   // Filter only active products
-  const activeProducts = products.filter(product => product.is_active === true || product.is_active === 'true');
+  const activeProducts = useMemo(
+    () =>
+      products.filter(
+        (product) => product.is_active === true || product.is_active === 'true'
+      ),
+    [products]
+  );
+
+  // Search filter
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm.trim()) return activeProducts;
+    const lower = searchTerm.toLowerCase();
+    return activeProducts.filter((product) => {
+      const name = (product.name || '').toLowerCase();
+      const desc = (product.description || '').toLowerCase();
+      return name.includes(lower) || desc.includes(lower);
+    });
+  }, [searchTerm, activeProducts]);
 
   return (
     <div className="home-page" id="home">
@@ -46,14 +64,24 @@ const Home = () => {
 
       <div className="products-section" id="products">
         <h2 className="section-title">Choose Your Subscription</h2>
+
+        <div className="products-search">
+          <input
+            type="text"
+            placeholder="Search subscriptions..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
         <div className="products-grid">
           {loading ? (
             <div className="loading-container">
               <div className="spinner"></div>
               <p>Loading products...</p>
             </div>
-          ) : activeProducts.length > 0 ? (
-            activeProducts.map((product) => (
+          ) : filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}

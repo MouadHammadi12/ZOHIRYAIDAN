@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminLogin.css';
 
 const AdminLogin = ({ onLogin }) => {
@@ -11,6 +12,8 @@ const AdminLogin = ({ onLogin }) => {
   const ADMIN_EMAIL = 'Zohizaidan981@gmail.com';
   const ADMIN_PASSWORD = 'zohirzaidan';
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -21,6 +24,7 @@ const AdminLogin = ({ onLogin }) => {
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
         localStorage.setItem('adminLoggedIn', 'true');
         onLogin(true);
+        navigate('/admin', { replace: true });
       } else {
         setError('Invalid email or password');
       }
@@ -59,7 +63,7 @@ const AdminLogin = ({ onLogin }) => {
 
           {error && <div className="error-message">{error}</div>}
 
-          <button type="submit" className="login-btn" disabled={loading}>
+          <button type="submit"className="login-btn" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>

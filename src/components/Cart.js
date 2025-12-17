@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCart } from '../contexts/CartContext';
 import './Cart.css';
 
@@ -57,7 +56,7 @@ const Cart = () => {
               <p>Your cart is empty</p>
               <button
                 className="continue-shopping-btn"
-                onClick={() => setIsCartOpen(false)}
+                onClick={()=>setIsCartOpen(false)}
               >
                 Continue Shopping
               </button>

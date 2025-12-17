@@ -110,14 +110,14 @@
 .cart-button {
   background: #0f172a;
   color: #f2f4f6;
-  padding: 0.75rem;
+  padding: 0.85rem;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #0f172a;
   border-radius: 6px;
-  position: relative;
+  position: relative; 
 }
 
 .cart-button:hover {
@@ -248,7 +248,6 @@
   }
 
   .cart-button {
-    margin-top: 1rem;
     justify-content: center;
     padding: 1rem;
     border-radius: 8px;

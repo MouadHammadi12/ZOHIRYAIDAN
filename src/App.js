@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
@@ -16,22 +16,28 @@ const ProtectedRoute = ({ children, isAdmin }) => {
   return isAdmin ? children : <Navigate to="/admin/login" replace />;
 };
 
-function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
+// Scroll to top on route change (except when we handle custom scroll like Subscriptions)
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    // Check if admin is logged in
-    const checkAdminStatus = () => {
-      const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-      setIsAdmin(adminLoggedIn);
-    };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
 
-    checkAdminStatus();
+  return null;
+};
 
+function App() {
+  const [isAdmin, setIsAdmin] = useState(() => {
+    return localStorage.getItem('adminLoggedIn') === 'true';
+  });
+
+  useEffect(() => {
     // Listen for storage changes (when admin logs in/out in another tab)
     const handleStorageChange = (e) => {
       if (e.key === 'adminLoggedIn') {
-        checkAdminStatus();
+        const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+        setIsAdmin(adminLoggedIn);
       }
     };
     window.addEventListener('storage', handleStorageChange);
@@ -55,6 +61,7 @@ function App() {
       <ProductsProvider>
         <CartProvider>
           <div className="App">
+            <ScrollToTop />
             <Navbar isAdmin={isAdmin} />
             <Routes>
               <Route path="/" element={<Home />} />

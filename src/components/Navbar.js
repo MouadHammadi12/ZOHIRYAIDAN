@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import './Navbar.css';
 
 const Navbar = ({ isAdmin }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getCartItemCount, toggleCart } = useCart();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,6 +20,37 @@ const Navbar = ({ isAdmin }) => {
   const handleCartClick = () => {
     toggleCart();
     closeMenu();
+  };
+
+  const handleHomeClick = (e) => {
+    e.preventDefault();
+    closeMenu();
+
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
+    }
+  };
+
+  const handleSubscriptionsClick = (e) => {
+    e.preventDefault();
+    closeMenu();
+
+    const scrollToSubscriptions = () => {
+      const section = document.getElementById('products');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      // ntaqlo l home w mn b3d nscrolliw
+      setTimeout(scrollToSubscriptions, 0);
+    } else {
+      scrollToSubscriptions();
+    }
   };
 
   return (
@@ -62,17 +95,17 @@ const Navbar = ({ isAdmin }) => {
 
         {/* Menu */}
         <div className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
-          <Link
-            to="/"
+          <a
+            href="/"
             className="navbar-link"
-            onClick={closeMenu}
+            onClick={handleHomeClick}
           >
             Home
-          </Link>
+          </a>
           <a
             href="#products"
             className="navbar-link"
-            onClick={closeMenu}
+            onClick={handleSubscriptionsClick}
           >
             Subscriptions
           </a>
