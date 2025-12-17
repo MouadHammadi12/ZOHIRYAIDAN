@@ -22,7 +22,10 @@ const AdminLogin = ({ onLogin }) => {
     // Simulate API call
     setTimeout(() => {
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        // Save login status and timestamp
+        const loginTime = Date.now();
         localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('adminLoginTime', loginTime.toString());
         onLogin(true);
         navigate('/admin', { replace: true });
       } else {

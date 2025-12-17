@@ -27,25 +27,63 @@ const ScrollToTop = () => {
   return null;
 };
 
+// Session timeout: 30 minutes (1800000 ms)
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+
+// Check if admin session is still valid
+const checkSession = () => {
+  const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+  const loginTime = localStorage.getItem('adminLoginTime');
+  
+  if (!adminLoggedIn || !loginTime) {
+    return false;
+  }
+
+  const now = Date.now();
+  const timeElapsed = now - parseInt(loginTime, 10);
+  
+  // If session expired, clear it
+  if (timeElapsed > SESSION_TIMEOUT) {
+    localStorage.removeItem('adminLoggedIn');
+    localStorage.removeItem('adminLoginTime');
+    return false;
+  }
+  
+  return true;
+};
+
 function App() {
   const [isAdmin, setIsAdmin] = useState(() => {
-    return localStorage.getItem('adminLoggedIn') === 'true';
+    return checkSession();
   });
 
   useEffect(() => {
+    // Check session on mount and periodically
+    const interval = setInterval(() => {
+      const isValid = checkSession();
+      if (!isValid && isAdmin) {
+        setIsAdmin(false);
+        // Redirect to login if on admin page
+        if (window.location.pathname.startsWith('/admin')) {
+          window.location.href = '/admin/login';
+        }
+      }
+    }, 60000); // Check every minute
+
     // Listen for storage changes (when admin logs in/out in another tab)
     const handleStorageChange = (e) => {
-      if (e.key === 'adminLoggedIn') {
-        const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-        setIsAdmin(adminLoggedIn);
+      if (e.key === 'adminLoggedIn' || e.key === 'adminLoginTime') {
+        const isValid = checkSession();
+        setIsAdmin(isValid);
       }
     };
     window.addEventListener('storage', handleStorageChange);
 
     return () => {
+      clearInterval(interval);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [isAdmin]);
 
   const handleAdminLogin = (loggedIn) => {
     setIsAdmin(loggedIn);
@@ -53,6 +91,7 @@ function App() {
 
   const handleAdminLogout = () => {
     localStorage.removeItem('adminLoggedIn');
+    localStorage.removeItem('adminLoginTime');
     setIsAdmin(false);
   };
 
